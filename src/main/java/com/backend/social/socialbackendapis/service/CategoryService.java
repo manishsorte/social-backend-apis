@@ -2,6 +2,7 @@ package com.backend.social.socialbackendapis.service;
 
 
 import com.backend.social.socialbackendapis.payload.CategoryDto;
+import com.backend.social.socialbackendapis.payload.CategoryPaginationResponse;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface CategoryService {
 
     CategoryDto getCategory(Integer categoryId);
 
-    List<CategoryDto> getAllCategory();
+    CategoryPaginationResponse getAllCategory(Integer pageNumber, Integer pageSize);
 }

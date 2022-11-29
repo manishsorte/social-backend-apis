@@ -3,10 +3,14 @@ package com.backend.social.socialbackendapis.service.impl;
 import com.backend.social.socialbackendapis.entity.Category;
 import com.backend.social.socialbackendapis.exception.ResourceNotFoundException;
 import com.backend.social.socialbackendapis.payload.CategoryDto;
+import com.backend.social.socialbackendapis.payload.CategoryPaginationResponse;
 import com.backend.social.socialbackendapis.repository.CategoryRepository;
 import com.backend.social.socialbackendapis.service.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,11 +55,21 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategory() {
-        List<Category> getAllCategories = this.categoryRepository.findAll();
+    public CategoryPaginationResponse getAllCategory(Integer pageNumber, Integer pageSize) {
+        Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
+        Page<Category> categoryPage = this.categoryRepository.findAll(pageInfo);
+        List<Category> getAllCategories = categoryPage.getContent();
         List<CategoryDto> allCategories = getAllCategories.stream()
                 .map(this::categoryToDto).toList();
-        return allCategories;
+
+        CategoryPaginationResponse categoryPaginationResponse = new CategoryPaginationResponse();
+        categoryPaginationResponse.setContent(allCategories);
+        categoryPaginationResponse.setPageNumber(categoryPage.getNumber());
+        categoryPaginationResponse.setPageSize(categoryPage.getSize());
+        categoryPaginationResponse.setTotalElements(categoryPage.getTotalElements());
+        categoryPaginationResponse.setTotalPages(categoryPage.getTotalPages());
+        categoryPaginationResponse.setLastPage(categoryPage.isLast());
+        return categoryPaginationResponse;
     }
 
     private Category dtoToCategory(CategoryDto categoryDto) {

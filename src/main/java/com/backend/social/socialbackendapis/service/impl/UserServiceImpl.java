@@ -3,10 +3,14 @@ package com.backend.social.socialbackendapis.service.impl;
 import com.backend.social.socialbackendapis.entity.User;
 import com.backend.social.socialbackendapis.exception.ResourceNotFoundException;
 import com.backend.social.socialbackendapis.payload.UserDto;
+import com.backend.social.socialbackendapis.payload.UserPaginationResponse;
 import com.backend.social.socialbackendapis.repository.UserRepository;
 import com.backend.social.socialbackendapis.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,15 +57,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public UserPaginationResponse getAllUsers(Integer pageNumber, Integer pageSize) {
 
-        List<User> listOfAllUsers = this.userRepository.findAll();
+        Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
+        Page<User> userPage = this.userRepository.findAll(pageInfo);
+        List<User> listOfAllUsers = userPage.getContent();
 
         List<UserDto> userDtoList = listOfAllUsers.stream()
                 .map(this::userToDto)
                 .collect(Collectors.toList());
 
-        return userDtoList;
+        UserPaginationResponse userPaginationResponse = new UserPaginationResponse();
+        userPaginationResponse.setContent(userDtoList);
+        userPaginationResponse.setPageNumber(userPage.getNumber());
+        userPaginationResponse.setPageSize(userPage.getSize());
+        userPaginationResponse.setTotalElements(userPage.getTotalElements());
+        userPaginationResponse.setTotalPages(userPage.getTotalPages());
+        userPaginationResponse.setLastPage(userPage.isLast());
+
+        return userPaginationResponse;
     }
 
     @Override

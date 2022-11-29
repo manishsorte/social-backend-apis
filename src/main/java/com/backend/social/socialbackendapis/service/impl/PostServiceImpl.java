@@ -5,7 +5,7 @@ import com.backend.social.socialbackendapis.entity.Post;
 import com.backend.social.socialbackendapis.entity.User;
 import com.backend.social.socialbackendapis.exception.ResourceNotFoundException;
 import com.backend.social.socialbackendapis.payload.PostDto;
-import com.backend.social.socialbackendapis.payload.PostResponse;
+import com.backend.social.socialbackendapis.payload.PostPaginationResponse;
 import com.backend.social.socialbackendapis.repository.CategoryRepository;
 import com.backend.social.socialbackendapis.repository.PostRepository;
 import com.backend.social.socialbackendapis.repository.UserRepository;
@@ -84,7 +84,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponse getAllPosts(Integer pageNumber, Integer pageSize) {
+    public PostPaginationResponse getAllPosts(Integer pageNumber, Integer pageSize) {
 
         Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
         Page<Post> pagePosts = this.postRepository.findAll(pageInfo);
@@ -93,7 +93,7 @@ public class PostServiceImpl implements PostService {
                 .map(this::postToDto)
                 .collect(Collectors.toList());
 
-        PostResponse postResponse = new PostResponse();
+        PostPaginationResponse postResponse = new PostPaginationResponse();
         postResponse.setContent(postDtoList);
         postResponse.setPageNumber(pagePosts.getNumber());
         postResponse.setPageSize(pagePosts.getSize());

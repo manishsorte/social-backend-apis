@@ -1,6 +1,7 @@
 package com.backend.social.socialbackendapis.controller;
 
 import com.backend.social.socialbackendapis.payload.UserDto;
+import com.backend.social.socialbackendapis.payload.UserPaginationResponse;
 import com.backend.social.socialbackendapis.service.impl.UserServiceImpl;
 import com.backend.social.socialbackendapis.utils.ApiResponse;
 import jakarta.validation.Valid;
@@ -9,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -36,10 +36,11 @@ public class UserController {
         return new ResponseEntity<>(getUser,HttpStatus.FOUND);
     }
 
-    @GetMapping("/")
-    private ResponseEntity<List<UserDto>> getAllUsers(){
-        List<UserDto> users = this.userService.getAllUsers();
-       return new ResponseEntity<>(users,HttpStatus.FOUND);
+    @GetMapping("/allUsers")
+    private ResponseEntity<UserPaginationResponse> getAllUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                               @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize) {
+        UserPaginationResponse allUsers = this.userService.getAllUsers(pageNumber, pageSize);
+        return new ResponseEntity<>(allUsers, HttpStatus.FOUND);
     }
 
     @DeleteMapping("/{userId}")
