@@ -1,6 +1,7 @@
 package com.backend.social.socialbackendapis.controller;
 
 import com.backend.social.socialbackendapis.payload.PostDto;
+import com.backend.social.socialbackendapis.payload.PostResponse;
 import com.backend.social.socialbackendapis.service.impl.PostServiceImpl;
 import com.backend.social.socialbackendapis.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,10 @@ public class PostController {
     }
 
     @GetMapping("/allPost")
-    public ResponseEntity<List<PostDto>> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                    @RequestParam(value = "pageSize", defaultValue = "5" +
+    public ResponseEntity<PostResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+                                                   @RequestParam(value = "pageSize", defaultValue = "5" +
                                                             "", required = false) Integer pageSize) {
-        List<PostDto> allPost = this.postService.getAllPosts(pageNumber, pageSize);
+        PostResponse allPost = this.postService.getAllPosts(pageNumber, pageSize);
         return new ResponseEntity<>(allPost, HttpStatus.OK);
     }
 

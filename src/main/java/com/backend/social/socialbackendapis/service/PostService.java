@@ -2,6 +2,7 @@ package com.backend.social.socialbackendapis.service;
 
 
 import com.backend.social.socialbackendapis.payload.PostDto;
+import com.backend.social.socialbackendapis.payload.PostResponse;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface PostService {
 
     PostDto getPostById(Integer postId);
 
-    List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize);
+    PostResponse getAllPosts(Integer pageNumber, Integer pageSize);
 
     List<PostDto> getPostByCategory(Integer categoryId);
 
