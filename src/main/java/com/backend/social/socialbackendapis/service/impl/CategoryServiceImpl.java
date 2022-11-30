@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,8 +56,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryPaginationResponse getAllCategory(Integer pageNumber, Integer pageSize) {
-        Pageable pageInfo = PageRequest.of(pageNumber, pageSize);
+    public CategoryPaginationResponse getAllCategory(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
+
+        Sort sort = sortDirection.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageInfo = PageRequest.of(pageNumber, pageSize, sort);
         Page<Category> categoryPage = this.categoryRepository.findAll(pageInfo);
         List<Category> getAllCategories = categoryPage.getContent();
         List<CategoryDto> allCategories = getAllCategories.stream()

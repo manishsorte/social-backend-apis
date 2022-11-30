@@ -38,8 +38,10 @@ public class UserController {
 
     @GetMapping("/allUsers")
     private ResponseEntity<UserPaginationResponse> getAllUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                               @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize) {
-        UserPaginationResponse allUsers = this.userService.getAllUsers(pageNumber, pageSize);
+                                                               @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+                                                               @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+                                                               @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDirection) {
+        UserPaginationResponse allUsers = this.userService.getAllUsers(pageNumber, pageSize, sortBy, sortDirection);
         return new ResponseEntity<>(allUsers, HttpStatus.FOUND);
     }
 

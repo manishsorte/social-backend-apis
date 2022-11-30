@@ -48,9 +48,10 @@ public class PostController {
 
     @GetMapping("/allPost")
     public ResponseEntity<PostPaginationResponse> getAllPost(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
-                                                             @RequestParam(value = "pageSize", defaultValue = "5" +
-                                                            "", required = false) Integer pageSize) {
-        PostPaginationResponse allPost = this.postService.getAllPosts(pageNumber, pageSize);
+                                                             @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
+                                                             @RequestParam(value = "sortBy", defaultValue = "postId", required = false) String sortBy,
+                                                             @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDirection) {
+        PostPaginationResponse allPost = this.postService.getAllPosts(pageNumber, pageSize, sortBy, sortDirection);
         return new ResponseEntity<>(allPost, HttpStatus.OK);
     }
 
