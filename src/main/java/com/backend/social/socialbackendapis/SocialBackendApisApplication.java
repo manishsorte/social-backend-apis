@@ -1,13 +1,27 @@
 package com.backend.social.socialbackendapis;
 
+import com.backend.social.socialbackendapis.config.Constants;
+import com.backend.social.socialbackendapis.entity.Role;
+import com.backend.social.socialbackendapis.repository.RoleRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 
 @SpringBootApplication
-public class SocialBackendApisApplication {
+public class SocialBackendApisApplication implements CommandLineRunner {
+
+    @Autowired
+    private RoleRepository roleRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(SocialBackendApisApplication.class, args);
@@ -16,5 +30,35 @@ public class SocialBackendApisApplication {
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+
+        System.out.println(this.passwordEncoder.encode("xyz"));
+
+        try {
+
+            Role role = new Role();
+            role.setId(Constants.ADMIN_USER);
+            role.setName("ROLE_ADMIN");
+
+            Role role1 = new Role();
+            role1.setId(Constants.NORMAL_USER);
+            role1.setName("ROLE_NORMAL");
+
+            List<Role> roles = List.of(role, role1);
+
+            List<Role> result = this.roleRepo.saveAll(roles);
+
+            result.forEach(r -> {
+                System.out.println(r.getName());
+            });
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+
     }
 }
